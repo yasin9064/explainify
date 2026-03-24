@@ -37,10 +37,7 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
 }
 
 // ── OpenAI client ─────────────────────────────────────
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_BASE_URL ?? "https://integrate.api.nvidia.com/v1",
-});
+// Instantiated lazily inside the POST handler to prevent build errors.
 
 // ── Prompt builders ───────────────────────────────────
 function buildPrompt(text: string, tone: string): string {
@@ -89,6 +86,12 @@ export async function POST(req: NextRequest) {
   // AI call
   try {
     const model = process.env.OPENAI_MODEL ?? "nvidia/nemotron-3-super-120b-a12b";
+    
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || "", // Provide fallback to avoid constructor throw if undefined
+      baseURL: process.env.OPENAI_BASE_URL ?? "https://integrate.api.nvidia.com/v1",
+    });
+
     const completion = await openai.chat.completions.create({
       model,
       messages: [
