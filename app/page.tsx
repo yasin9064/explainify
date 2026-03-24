@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroAuthButtons from "./_components/HeroAuthButtons";
 
 export default function Home() {
   return (
@@ -42,7 +43,6 @@ export default function Home() {
         />
 
         <div style={{ position: "relative", maxWidth: "720px", margin: "0 auto" }}>
-          {/* Badge */}
           <div
             style={{
               display: "inline-flex",
@@ -58,7 +58,7 @@ export default function Home() {
               fontWeight: 500,
             }}
           >
-            <span>✨</span> Free — No signup needed
+            <span>✨</span> Powered by AI
           </div>
 
           <h1
@@ -87,18 +87,11 @@ export default function Home() {
             curious 5-year-old. Powered by GPT-4.
           </p>
 
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/app" className="btn-primary" style={{ fontSize: "16px", padding: "14px 36px" }}>
-              Try for Free →
-            </Link>
-            <Link href="/pricing" className="btn-secondary" style={{ fontSize: "16px", padding: "14px 28px" }}>
-              See Pricing
-            </Link>
-          </div>
+          <HeroAuthButtons />
 
           {/* Trust bar */}
           <p style={{ marginTop: "40px", fontSize: "13px", color: "var(--text-muted)" }}>
-            🔒 No signup · ⚡ Results in seconds · 🌍 Any topic
+            🔒 Secure Login · ⚡ Results in seconds · 🌍 Any topic
           </p>
         </div>
       </section>
@@ -313,11 +306,9 @@ export default function Home() {
           <span className="gradient-text">smarter</span>?
         </h2>
         <p style={{ color: "var(--text-secondary)", marginBottom: "32px", fontSize: "16px" }}>
-          No account needed. Just paste and explain.
+          Sign up instantly and start explaining any complex text.
         </p>
-        <Link href="/app" className="btn-primary" style={{ fontSize: "16px", padding: "14px 40px" }}>
-          Start Explaining →
-        </Link>
+        <HeroAuthButtons />
       </section>
     </div>
   );

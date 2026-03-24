@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <header
@@ -60,9 +62,43 @@ export default function Navbar() {
           className="desktop-nav"
         >
           <NavLinks />
-          <Link href="/app" className="btn-primary" style={{ padding: "8px 20px", fontSize: "14px" }}>
-            Try for Free
-          </Link>
+          {session ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
+                {session.user?.email}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="btn-secondary"
+                style={{ padding: "8px 20px", fontSize: "14px", cursor: "pointer" }}
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <button
+                onClick={() => signIn("google")}
+                style={{
+                  color: "var(--text-secondary)",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => signIn("google")}
+                className="btn-primary"
+                style={{ padding: "8px 20px", fontSize: "14px", cursor: "pointer", border: "none" }}
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -97,14 +133,46 @@ export default function Navbar() {
           }}
         >
           <NavLinks mobile onClose={() => setOpen(false)} />
-          <Link
-            href="/app"
-            className="btn-primary"
-            style={{ textAlign: "center" }}
-            onClick={() => setOpen(false)}
-          >
-            Try for Free
-          </Link>
+          {session ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
+              <span style={{ fontSize: "14px", color: "var(--text-secondary)", textAlign: "center" }}>
+                {session.user?.email}
+              </span>
+              <button
+                className="btn-secondary"
+                style={{ cursor: "pointer", width: "100%", padding: "12px" }}
+                onClick={() => {
+                  setOpen(false);
+                  signOut();
+                }}
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
+              <button
+                className="btn-secondary"
+                style={{ cursor: "pointer", width: "100%", padding: "12px" }}
+                onClick={() => {
+                  setOpen(false);
+                  signIn("google");
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                className="btn-primary"
+                style={{ cursor: "pointer", border: "none", width: "100%", padding: "12px" }}
+                onClick={() => {
+                  setOpen(false);
+                  signIn("google");
+                }}
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
       )}
 
