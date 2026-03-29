@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useAuth } from "@/lib/firebase/AuthContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
+  const { user, signInWithGoogle, signOut, loading } = useAuth();
 
   return (
     <header
@@ -62,43 +62,49 @@ export default function Navbar() {
           className="desktop-nav"
         >
           <NavLinks />
-          {session ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
-                {session.user?.email}
-              </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {loading ? (
+              <div style={{ width: "80px", height: "36px", background: "var(--border)", borderRadius: "9999px", opacity: 0.5 }}></div>
+            ) : user ? (
+              <>
+                <Link
+                  href="/app"
+                  className="btn-primary"
+                  style={{ padding: "8px 20px", fontSize: "14px", cursor: "pointer", border: "none", textDecoration: "none" }}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={signOut}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  title="Sign Out"
+                >
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid var(--border)" }} />
+                  ) : (
+                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg,var(--brand-from),var(--brand-to))", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "bold", fontSize: "14px" }}>
+                      {user.displayName?.charAt(0) || "U"}
+                    </div>
+                  )}
+                </button>
+              </>
+            ) : (
               <button
-                onClick={() => signOut()}
-                className="btn-secondary"
-                style={{ padding: "8px 20px", fontSize: "14px", cursor: "pointer" }}
-              >
-                Sign Out
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <button
-                onClick={() => signIn("google")}
-                style={{
-                  color: "var(--text-secondary)",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => signIn("google")}
+                onClick={signInWithGoogle}
                 className="btn-primary"
                 style={{ padding: "8px 20px", fontSize: "14px", cursor: "pointer", border: "none" }}
               >
-                Sign Up
+                Sign In
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Mobile hamburger */}
@@ -133,46 +139,35 @@ export default function Navbar() {
           }}
         >
           <NavLinks mobile onClose={() => setOpen(false)} />
-          {session ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
-              <span style={{ fontSize: "14px", color: "var(--text-secondary)", textAlign: "center" }}>
-                {session.user?.email}
-              </span>
-              <button
-                className="btn-secondary"
-                style={{ cursor: "pointer", width: "100%", padding: "12px" }}
-                onClick={() => {
-                  setOpen(false);
-                  signOut();
-                }}
-              >
-                Sign Out
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
-              <button
-                className="btn-secondary"
-                style={{ cursor: "pointer", width: "100%", padding: "12px" }}
-                onClick={() => {
-                  setOpen(false);
-                  signIn("google");
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                className="btn-primary"
-                style={{ cursor: "pointer", border: "none", width: "100%", padding: "12px" }}
-                onClick={() => {
-                  setOpen(false);
-                  signIn("google");
-                }}
-              >
-                Sign Up
-              </button>
-            </div>
-          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "8px", borderTop: "1px solid var(--border)", paddingTop: "16px" }}>
+            {user ? (
+               <>
+                 <Link
+                   href="/app"
+                   className="btn-primary"
+                   style={{ cursor: "pointer", border: "none", width: "100%", padding: "12px", textAlign: "center", textDecoration: "none" }}
+                   onClick={() => setOpen(false)}
+                 >
+                   Dashboard
+                 </Link>
+                 <button
+                   className="btn-secondary"
+                   style={{ width: "100%", padding: "12px", cursor: "pointer", border: "1px solid var(--border)", background: "transparent", color: "var(--text-primary)", borderRadius: "9999px" }}
+                   onClick={() => { signOut(); setOpen(false); }}
+                 >
+                   Sign Out
+                 </button>
+               </>
+            ) : (
+               <button
+                 className="btn-primary"
+                 style={{ width: "100%", padding: "12px", cursor: "pointer", border: "none" }}
+                 onClick={() => { signInWithGoogle(); setOpen(false); }}
+               >
+                 Sign In
+               </button>
+            )}
+          </div>
         </div>
       )}
 

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import HeroAuthButtons from "./_components/HeroAuthButtons";
 
 export default function Home() {
   return (
@@ -87,11 +86,15 @@ export default function Home() {
             curious 5-year-old. Powered by GPT-4.
           </p>
 
-          <HeroAuthButtons />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Link href="/app" className="btn-primary" style={{ fontSize: "16px", padding: "14px 36px" }}>
+              Start for Free ✨
+            </Link>
+          </div>
 
           {/* Trust bar */}
           <p style={{ marginTop: "40px", fontSize: "13px", color: "var(--text-muted)" }}>
-            🔒 Secure Login · ⚡ Results in seconds · 🌍 Any topic
+            🚀 Instant Access · ⚡ Results in seconds · 🌍 Any topic
           </p>
         </div>
       </section>
@@ -306,9 +309,13 @@ export default function Home() {
           <span className="gradient-text">smarter</span>?
         </h2>
         <p style={{ color: "var(--text-secondary)", marginBottom: "32px", fontSize: "16px" }}>
-          Sign up instantly and start explaining any complex text.
+          Get started instantly and start explaining any complex text.
         </p>
-        <HeroAuthButtons />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Link href="/app" className="btn-primary" style={{ fontSize: "16px", padding: "14px 36px" }}>
+            Go to App →
+          </Link>
+        </div>
       </section>
     </div>
   );
